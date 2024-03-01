@@ -1,4 +1,4 @@
-# StartDoorPhone
+# SmartDoorPhone
 
 ![Image](./docs/img/_e67b7304-4aa4-4d6b-8bc5-cdb299155211.jpg)
 
