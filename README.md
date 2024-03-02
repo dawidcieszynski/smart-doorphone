@@ -13,9 +13,13 @@ Purpose of this project is to create a device integrated with Home Assistant tha
 
 ## Technologies used:
 
-- ESP32 microcontroller
+- ESP32 / ESP8266 
 - ESPHome (uses Platform.io)
 - Home Assistant
+
+## Docs
+
+-  [Installation](./docs/Installation.md)
 
 ## Maybe
 
