@@ -1,0 +1,53 @@
+esphome:
+  name: sdp
+  friendly_name: SDP
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "SROWyEBRs3XJwOTiHwFKoYy7ypwLgZsKY0aJZiZ2ggg="
+
+ota:
+  password: "5bbcfd5ff699de5288ed65e4ae78b189"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+sensor:
+  - platform: pulse_meter
+    id: pulse_meter_gpio0
+    name: GPIO0
+    pin: GPIO0
+    # internal_filter: 10us
+    total:
+      name: 'GPIO0 Total'
+  - platform: pulse_meter
+    id: pulse_meter_gpio3
+    name: GPIO3
+    pin: GPIO3
+    # internal_filter: 10us
+    total:
+      name: 'GPIO3 Total'
+
+button:
+  - platform: template
+    name: Reset GPIO0
+    on_press:
+        - pulse_meter.set_total_pulses:
+            id: pulse_meter_gpio0
+            value: !lambda 'return 0;'
+  - platform: template
+    name: Reset GPIO3
+    on_press:
+        - pulse_meter.set_total_pulses:
+            id: pulse_meter_gpio3
+            value: !lambda 'return 0;'

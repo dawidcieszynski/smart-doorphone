@@ -1,0 +1,29 @@
+esphome:
+  name: sdp-simulator
+  friendly_name: SDP-SIMULATOR
+
+esp8266:
+  board: esp01_1m
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "BANmhZKGWFU2VHul6M0TdSb7xE1rrKNBpA48MDLzbi0="
+
+ota:
+  password: "83e1110bdb67b7345321871267daaaf5"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Sdp-Simulator Fallback Hotspot"
+    password: "YTchlt5pCo24"
+
+captive_portal:
+    
