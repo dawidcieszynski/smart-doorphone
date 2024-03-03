@@ -29,3 +29,4 @@ Purpose of this project is to create a device integrated with Home Assistant tha
 
 - [ESPHome Pulse Meter Component](https://esphome.io/components/sensor/pulse_meter.html)
   - [source code](https://github.com/esphome/esphome/tree/dev/esphome/components/pulse_meter)
+- [Scheme-it](https://www.digikey.pl/en/schemeit/project) - tool for schematics creation
