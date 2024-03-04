@@ -17,6 +17,14 @@ Purpose of this project is to create a device integrated with Home Assistant tha
 - ESPHome (uses Platform.io)
 - Home Assistant
 
+## Supported / tested devices
+
+| Device / board | Reference          | SDP | SDP-SIMULATOR |
+| -------------- | ------------------ | --- | ------------- |
+| ESP32-CAM      | esp01_1m           | ?   | ?             |
+| ESP_01         |                    | ?   | ?             |
+| ESP32-C3       | esp32-c3-devkitm-1 | ?   | ?             |
+
 ## Docs
 
 -  [Installation](./docs/Installation.md)
@@ -30,3 +38,11 @@ Purpose of this project is to create a device integrated with Home Assistant tha
 - [ESPHome Pulse Meter Component](https://esphome.io/components/sensor/pulse_meter.html)
   - [source code](https://github.com/esphome/esphome/tree/dev/esphome/components/pulse_meter)
 - [Scheme-it](https://www.digikey.pl/en/schemeit/project) - tool for schematics creation
+- Boards
+  - ESP32-CAM
+    - https://lastminuteengineers.com/esp32-cam-pinout-reference/
+  - ESP32-C3 MINI
+    - https://sklep.msalamon.pl/wp-content/uploads/2024/01/ESP32_C3_MINI-9.png
+    - https://sklep.msalamon.pl/produkt/plytka-esp32-c3-super-mini-wifi-bluetooth/
+    - https://pl.aliexpress.com/item/1005005834887898.html
+  - ESP_01
