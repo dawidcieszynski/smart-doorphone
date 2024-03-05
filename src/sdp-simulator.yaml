@@ -20,10 +20,78 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
 
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: "Sdp-Simulator Fallback Hotspot"
-    password: "YTchlt5pCo24"
+number:
+  - platform: template
+    name: "Flat No"
+    icon: mdi:house
+    optimistic: true
+    initial_value: 1
+    step: 1
+    min_value: 1
+    max_value: 25
+    mode: box
+    on_value:
+      then:
+        - sensor.template.publish:
+            id: num_from_text
+            state: !lambda |-
+              int flasher_pin = 2; // GPIO2 for ESP-01S
 
-captive_portal:
-    
+              // some noise
+              digitalWrite(flasher_pin, LOW);
+              delayMicroseconds(24);
+              digitalWrite(flasher_pin, HIGH);
+              delayMicroseconds(100);
+
+              // initial
+              digitalWrite(flasher_pin, LOW);
+              delay(202);
+              digitalWrite(flasher_pin, HIGH);
+              delay(2.2);
+
+              for (int i = 0; i < x; i++) {
+                  digitalWrite(flasher_pin, LOW);
+                  delayMicroseconds(22);
+                  digitalWrite(flasher_pin, HIGH);
+                  delayMicroseconds(68);
+              }
+
+              delay(10);
+
+              // some noise
+              digitalWrite(flasher_pin, LOW);
+              delayMicroseconds(24);
+              digitalWrite(flasher_pin, HIGH);
+              delayMicroseconds(100);
+
+              return x;
+
+sensor:
+  - platform: template
+    id: num_from_text
+    name: "Number from text"
+
+switch:
+  - platform: gpio
+    pin:
+      number: 2
+      inverted: true
+    id: the_pin
+
+button:
+  - platform: template
+    name: Ring
+    on_press:
+        - lambda: |-
+              int flasher_pin = 2; // GPIO2 for ESP-01S
+              for( int i = 0; i < 4; i ++){
+                // pause
+                delay(50);
+                // ring
+                for (int i = 0; i < 110; i++) {
+                    digitalWrite(flasher_pin, LOW);
+                    delayMicroseconds(195);
+                    digitalWrite(flasher_pin, HIGH);
+                    delayMicroseconds(231);
+                }
+              }
