@@ -27,7 +27,7 @@ Purpose of this project is to create a device integrated with Home Assistant tha
 
 ## Docs
 
--  [Installation](./docs/Installation.md)
+-  [Development](./docs/Development.md)
 
 ## Maybe
 
