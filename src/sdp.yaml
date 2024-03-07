@@ -3,7 +3,7 @@ esphome:
   friendly_name: SDP
 
 esp32:
-  board: esp32-c3-devkitm-1
+  board: esp32dev
   framework:
     type: arduino
 
