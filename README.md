@@ -19,11 +19,11 @@ Purpose of this project is to create a device integrated with Home Assistant tha
 
 ## Supported / tested devices
 
-| Device / board | Reference          | SDP | SDP-SIMULATOR |
-| -------------- | ------------------ | --- | ------------- |
-| ESP32-CAM      | esp32dev           | ?   | ?             |
-| ESP_01         | esp01_1m           | ?   | ?             |
-| ESP32-C3       | esp32-c3-devkitm-1 | ?   | ?             |
+| Device / board | Reference          | SDP      | SDP-SIMULATOR |
+| -------------- | ------------------ | -------- | ------------- |
+| ESP32-CAM      | esp32dev           | yes      | ?             |
+| ESP_01         | esp01_1m           | ?        | yes           |
+| ESP32-C3       | esp32-c3-devkitm-1 | unstable | ?             |
 
 ## Docs
 
