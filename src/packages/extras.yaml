@@ -1,0 +1,10 @@
+sensor:
+  - platform: uptime
+    entity_category: diagnostic
+    name: Uptime
+    update_interval: 600s
+
+text_sensor:
+  - platform: version
+    name: ESPHome Version
+    entity_category: diagnostic

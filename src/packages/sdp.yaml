@@ -1,0 +1,27 @@
+sensor:
+  - platform: pulse_meter
+    id: pulse_meter_gpio0
+    name: GPIO0
+    pin: GPIO0
+    total:
+      name: "GPIO0 Total"
+  - platform: pulse_meter
+    id: pulse_meter_gpio3
+    name: GPIO3
+    pin: GPIO3
+    total:
+      name: "GPIO3 Total"
+
+button:
+  - platform: template
+    name: Reset GPIO0
+    on_press:
+      - pulse_meter.set_total_pulses:
+          id: pulse_meter_gpio0
+          value: !lambda "return 0;"
+  - platform: template
+    name: Reset GPIO3
+    on_press:
+      - pulse_meter.set_total_pulses:
+          id: pulse_meter_gpio3
+          value: !lambda "return 0;"
