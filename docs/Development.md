@@ -20,9 +20,10 @@
       ![Image](../docs/img/esphome-sdp-projects.png)
 4. Build firmware using ESPHome
    1. Click three-dots menu -> Install -> Manual download - you will get the firmware
-   2. Upload the firmware using [web.esphome.io](https://web.esphome.io/)
+   2. Upload the firmware using [web.esphome.io](https://web.esphome.io/) using proper usb interface
 5. Now you should be able to update firmware wirelessly
     ![Image](../docs/img/esphome-sdp-projects-online.png)
+    (or use commandline: ```esphome compile *.yaml; esphome upload *.yaml```)
     and use the devices by webbrowser
     ![Image](../docs/img/sdp-web.png)
     ![Image](../docs/img/sdp-simulator-web.png)
