@@ -1,14 +1,22 @@
+external_components:
+  - source:
+      type: local
+      path: smart-doorphone/esphome/components
+    components: [pulse_meter]
+
 sensor:
   - platform: pulse_meter
     id: pulse_meter_gpio0
     name: GPIO0
     pin: GPIO0
+    internal_filter: 10us
     total:
       name: "GPIO0 Total"
   - platform: pulse_meter
     id: pulse_meter_gpio3
     name: GPIO3
     pin: GPIO3
+    internal_filter: 10us
     total:
       name: "GPIO3 Total"
 
