@@ -10,6 +10,7 @@ sensor:
     name: GPIO0
     pin: GPIO0
     internal_filter: 10us
+    initial_pulse: 200ms
     total:
       name: "GPIO0 Total"
   - platform: pulse_meter
@@ -17,6 +18,7 @@ sensor:
     name: GPIO3
     pin: GPIO3
     internal_filter: 10us
+    initial_pulse: 200ms
     total:
       name: "GPIO3 Total"
 

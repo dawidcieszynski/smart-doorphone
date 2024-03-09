@@ -23,6 +23,7 @@ CODEOWNERS = ["@stevebaxter", "@cstaahl", "@TrentHouliston"]
 
 pulse_meter_ns = cg.esphome_ns.namespace("pulse_meter")
 
+CONF_INITIAL_PULSE = 'initial_pulse'
 
 PulseMeterSensor = pulse_meter_ns.class_(
     "PulseMeterSensor", sensor.Sensor, cg.Component
@@ -38,6 +39,10 @@ SetTotalPulsesAction = pulse_meter_ns.class_("SetTotalPulsesAction", automation.
 
 
 def validate_internal_filter(value):
+    return cv.positive_time_period_microseconds(value)
+
+
+def validate_initial_pulse(value):
     return cv.positive_time_period_microseconds(value)
 
 
@@ -67,6 +72,7 @@ CONFIG_SCHEMA = sensor.sensor_schema(
     {
         cv.Required(CONF_PIN): validate_pulse_meter_pin,
         cv.Optional(CONF_INTERNAL_FILTER, default="13us"): validate_internal_filter,
+        cv.Optional(CONF_INITIAL_PULSE, default="200ms"): validate_initial_pulse,
         cv.Optional(CONF_TIMEOUT, default="5min"): validate_timeout,
         cv.Optional(CONF_TOTAL): sensor.sensor_schema(
             unit_of_measurement=UNIT_PULSES,
@@ -88,6 +94,7 @@ async def to_code(config):
     pin = await cg.gpio_pin_expression(config[CONF_PIN])
     cg.add(var.set_pin(pin))
     cg.add(var.set_filter_us(config[CONF_INTERNAL_FILTER]))
+    cg.add(var.set_initial_pulse_us(config[CONF_INITIAL_PULSE]))
     cg.add(var.set_timeout_us(config[CONF_TIMEOUT]))
     cg.add(var.set_filter_mode(config[CONF_INTERNAL_FILTER_MODE]))
 
