@@ -3,6 +3,7 @@
 number:
   - platform: template
     name: "Flat No"
+    id: flat_no
     icon: mdi:house
     optimistic: true
     initial_value: 1
@@ -12,39 +13,7 @@ number:
     mode: box
     on_value:
       then:
-        - sensor.template.publish:
-            id: last_flat_no
-            state: !lambda |-
-              int flasher_pin = 2; // GPIO2 for ESP-01S
-
-              // some noise
-              digitalWrite(flasher_pin, LOW);
-              delayMicroseconds(24);
-              digitalWrite(flasher_pin, HIGH);
-              delayMicroseconds(100);
-
-              // initial
-              digitalWrite(flasher_pin, LOW);
-              delay(202);
-              digitalWrite(flasher_pin, HIGH);
-              delay(2.2);
-
-              for (int i = 0; i < x; i++) {
-                  digitalWrite(flasher_pin, LOW);
-                  delayMicroseconds(22);
-                  digitalWrite(flasher_pin, HIGH);
-                  delayMicroseconds(68);
-              }
-
-              delay(10);
-
-              // some noise
-              digitalWrite(flasher_pin, LOW);
-              delayMicroseconds(24);
-              digitalWrite(flasher_pin, HIGH);
-              delayMicroseconds(100);
-
-              return x;
+        - script.execute: call_flat
 
 sensor:
   - platform: template
@@ -59,6 +28,11 @@ switch:
     id: the_pin
 
 button:
+  - platform: template
+    name: Call flat
+    on_press:
+        - script.execute: call_flat
+
   - platform: template
     name: Ring
     on_press:
@@ -75,3 +49,43 @@ button:
                 delayMicroseconds(231);
             }
           }
+
+script:
+  - id: call_flat
+    then:
+      - sensor.template.publish:
+          id: last_flat_no
+          state: !lambda |-
+            return id(flat_no).state;;
+
+      - lambda: |-
+          int flasher_pin = 2; // GPIO2 for ESP-01S
+
+          // some noise
+          digitalWrite(flasher_pin, LOW);
+          delayMicroseconds(24);
+          digitalWrite(flasher_pin, HIGH);
+          delayMicroseconds(100);
+
+          // initial
+          digitalWrite(flasher_pin, LOW);
+          delay(202);
+          digitalWrite(flasher_pin, HIGH);
+          delay(2.2);
+
+          auto flat = id(flat_no).state;
+
+          for (int i = 0; i < flat; i++) {
+              digitalWrite(flasher_pin, LOW);
+              delayMicroseconds(22);
+              digitalWrite(flasher_pin, HIGH);
+              delayMicroseconds(68);
+          }
+
+          delay(10);
+
+          // some noise
+          digitalWrite(flasher_pin, LOW);
+          delayMicroseconds(24);
+          digitalWrite(flasher_pin, HIGH);
+          delayMicroseconds(100);
