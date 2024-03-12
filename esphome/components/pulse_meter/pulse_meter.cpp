@@ -51,10 +51,25 @@ void PulseMeterSensor::loop() {
     switch (this->meter_state_) {
       case MeterState::INITIAL:
       case MeterState::TIMED_OUT: {
-        this->meter_state_ = MeterState::RUNNING;
+        this->meter_state_ = MeterState::WAITING;
+        ESP_LOGD(TAG, "State %" PRIu32 "", this->meter_state_);
+      } break;
+      case MeterState::WAITING: {
+        uint32_t delta_us = this->get_->last_detected_edge_us_ - this->last_processed_edge_us_;
+        if(delta_us > initial_pulse_us_)
+        {
+          ESP_LOGD(TAG, "Initial pulse %" PRIu32 "ms detected", delta_us / 1000);
+          // start counting
+          this->total_pulses_ = 0;
+          this->get_->count_ = 0;
+          this->set_->count_ = 0;
+          this->meter_state_ = MeterState::RUNNING;
+          ESP_LOGD(TAG, "State %" PRIu32 "", this->meter_state_);
+        }
       } break;
       case MeterState::RUNNING: {
         uint32_t delta_us = this->get_->last_detected_edge_us_ - this->last_processed_edge_us_;
+        ESP_LOGD(TAG, "Countable pulse(s) %" PRIu32 "ms detected (count: %" PRIu32 ")", delta_us / 1000, this->get_->count_);
         float pulse_width_us = delta_us / float(this->get_->count_);
         this->publish_state((60.0f * 1000000.0f) / pulse_width_us);
       } break;
@@ -70,11 +85,12 @@ void PulseMeterSensor::loop() {
     switch (this->meter_state_) {
       // Running and initial states can timeout
       case MeterState::INITIAL:
+      case MeterState::WAITING:
       case MeterState::RUNNING: {
         if (time_since_valid_edge_us > this->timeout_us_) {
           this->meter_state_ = MeterState::TIMED_OUT;
-          ESP_LOGD(TAG, "No pulse detected for %" PRIu32 "s, assuming 0 pulses/min",
-                   time_since_valid_edge_us / 1000000);
+          ESP_LOGD(TAG, "State %" PRIu32 "", this->meter_state_);
+          ESP_LOGD(TAG, "Timeout for %" PRIu32 "ms (count: %" PRIu32 ")", time_since_valid_edge_us / 1000), this->get_->count_;
           this->publish_state(0.0f);
         }
       } break;

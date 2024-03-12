@@ -1,3 +1,11 @@
+logger:
+  baud_rate: 0
+  logs:
+    sensor: WARN
+    internal_temperature: WARN
+    button: WARN
+    pulse_meter: DEBUG
+
 external_components:
   - source:
       type: local
@@ -11,6 +19,7 @@ sensor:
     pin: GPIO0
     internal_filter: 10us
     initial_pulse: 200ms
+    timeout: 2ms
     total:
       name: "GPIO0 Total"
   - platform: pulse_meter
@@ -19,6 +28,7 @@ sensor:
     pin: GPIO3
     internal_filter: 10us
     initial_pulse: 200ms
+    timeout: 2ms
     total:
       name: "GPIO3 Total"
 
