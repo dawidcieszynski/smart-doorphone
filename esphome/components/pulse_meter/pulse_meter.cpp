@@ -90,7 +90,7 @@ void PulseMeterSensor::loop() {
         if (time_since_valid_edge_us > this->timeout_us_) {
           this->meter_state_ = MeterState::TIMED_OUT;
           ESP_LOGD(TAG, "State %" PRIu32 "", this->meter_state_);
-          ESP_LOGD(TAG, "Timeout for %" PRIu32 "ms (count: %" PRIu32 ")", time_since_valid_edge_us / 1000), this->get_->count_;
+          ESP_LOGD(TAG, "Timeout for %" PRIu32 "ms (count: %" PRIu32 ")", time_since_valid_edge_us / 1000, this->get_->count_);
           this->publish_state(0.0f);
         }
       } break;
