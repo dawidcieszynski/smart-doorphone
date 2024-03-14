@@ -69,7 +69,7 @@ void PulseMeterSensor::loop() {
       } break;
       case MeterState::RUNNING: {
         uint32_t delta_us = this->get_->last_detected_edge_us_ - this->last_processed_edge_us_;
-        ESP_LOGD(TAG, "Countable pulse(s) %" PRIu32 "ms detected (count: %" PRIu32 ")", delta_us / 1000, this->get_->count_);
+        ESP_LOGD(TAG, "Countable pulse(s) %" PRIu32 "ms detected (count: %" PRIu32 ")", delta_us / 1000, this->total_pulses_);
         float pulse_width_us = delta_us / float(this->get_->count_);
         this->publish_state((60.0f * 1000000.0f) / pulse_width_us);
       } break;
@@ -90,7 +90,7 @@ void PulseMeterSensor::loop() {
         if (time_since_valid_edge_us > this->timeout_us_) {
           this->meter_state_ = MeterState::TIMED_OUT;
           ESP_LOGD(TAG, "State %" PRIu32 "", this->meter_state_);
-          ESP_LOGD(TAG, "Timeout for %" PRIu32 "ms (count: %" PRIu32 ")", time_since_valid_edge_us / 1000, this->get_->count_);
+          ESP_LOGD(TAG, "Timeout for %" PRIu32 "ms (count: %" PRIu32 ")", time_since_valid_edge_us / 1000, this->total_pulses_);
           this->publish_state(0.0f);
         }
       } break;
