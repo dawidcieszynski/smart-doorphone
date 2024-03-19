@@ -22,7 +22,7 @@ void PulseMeterSensor::setup() {
   this->last_processed_edge_us_ = micros();
 
   if (this->filter_mode_ == FILTER_EDGE) {
-    this->pin_->attach_interrupt(PulseMeterSensor::edge_intr, this, gpio::INTERRUPT_RISING_EDGE);
+    this->pin_->attach_interrupt(PulseMeterSensor::edge_intr, this, gpio::INTERRUPT_FALLING_EDGE);
   } else if (this->filter_mode_ == FILTER_PULSE) {
     this->pin_->attach_interrupt(PulseMeterSensor::pulse_intr, this, gpio::INTERRUPT_ANY_EDGE);
   }
@@ -106,7 +106,7 @@ void PulseMeterSensor::dump_config() {
   LOG_SENSOR("", "Pulse Meter", this);
   LOG_PIN("  Pin: ", this->pin_);
   if (this->filter_mode_ == FILTER_EDGE) {
-    ESP_LOGCONFIG(TAG, "  Filtering rising edges less than %" PRIu32 " µs apart", this->filter_us_);
+    ESP_LOGCONFIG(TAG, "  Filtering falling edges less than %" PRIu32 " µs apart", this->filter_us_);
   } else {
     ESP_LOGCONFIG(TAG, "  Filtering pulses shorter than %" PRIu32 " µs", this->filter_us_);
   }
