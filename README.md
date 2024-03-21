@@ -39,8 +39,6 @@ Purpose of this project is to create a device integrated with Home Assistant tha
   - [source code](https://github.com/esphome/esphome/tree/dev/esphome/components/pulse_meter)
 - [Scheme-it](https://www.digikey.pl/en/schemeit/project) - tool for schematics creation
 - [Proxmox-Helper-Scripts](https://tteck.github.io/Proxmox/) - helper scripts for ESPHome LXC (and mayn other) installation as a separate environment
-    - ```bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/ct/esphome.sh)"```
-      - custom settings: disk size 32GB, enable root access
 - Boards
   - ESP32-CAM
     - https://lastminuteengineers.com/esp32-cam-pinout-reference/
@@ -49,3 +47,4 @@ Purpose of this project is to create a device integrated with Home Assistant tha
     - https://sklep.msalamon.pl/produkt/plytka-esp32-c3-super-mini-wifi-bluetooth/
     - https://pl.aliexpress.com/item/1005005834887898.html
   - ESP_01
+  
