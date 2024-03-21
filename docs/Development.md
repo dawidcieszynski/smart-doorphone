@@ -6,6 +6,7 @@
      - [Proxmox-Helper-Scripts](https://tteck.github.io/Proxmox/) - helper scripts for ESPHome LXC (and mayn other) installation as a separate environment
         - ```bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/ct/esphome.sh)"```
           - custom settings: disk size 32GB, enable root access
+        - to update ESPHome just type ```update``` in the LXC console.
 2. VSCode + Remote - SSH extension
    - ```code --folder-uri "vscode-remote://ssh-remote+root@192.168.10.128/root/config"```
 3. Source code - depending on the ESPHome configuration clone repo into the ESPHome config folder
