@@ -31,7 +31,7 @@ button:
   - platform: template
     name: Call flat
     on_press:
-        - script.execute: call_flat
+      - script.execute: call_flat
 
   - platform: template
     name: Ring
@@ -49,6 +49,13 @@ button:
                 delayMicroseconds(231);
             }
           }
+
+esphome:
+  on_boot:
+    then:
+      - lambda: |-
+          int flasher_pin = 2; // GPIO2 for ESP-01S
+          digitalWrite(flasher_pin, HIGH);
 
 script:
   - id: call_flat
