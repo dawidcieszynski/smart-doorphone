@@ -19,8 +19,8 @@ sensor:
     pin: GPIO0
     internal_filter: 10us
     initial_pulse: 200ms
-    timeout: 2ms
-    internal_filter_mode: EDGE
+    timeout: 45ms
+    internal_filter_mode: PULSE
     total:
       name: "GPIO0 Total"
 
@@ -30,8 +30,8 @@ sensor:
     pin: GPIO4
     internal_filter: 10us
     initial_pulse: 200ms
-    timeout: 2ms
-    internal_filter_mode: PULSE
+    timeout: 45ms
+    internal_filter_mode: EDGE
     total:
       name: "GPIO4 Total"
 

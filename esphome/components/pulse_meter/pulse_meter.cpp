@@ -115,10 +115,28 @@ namespace esphome
 
             ESP_LOGD(TAG, "Timeout for %" PRIu32 "ms (count: %" PRIu32 ")", time_since_valid_edge_us / 1000, this->total_pulses_);
             ESP_LOGD(TAG, "Pulses %" PRIu32 "", this->pulse_lengths_index);
+
             for (size_t i = 0; i < this->pulse_lengths_index; i++)
             {
               ESP_LOGD(TAG, "Pulse %" PRIu32 "", this->pulse_lengths[i]);
             }
+
+            // analyze pulses
+            if (this->pulse_lengths_index > 0)
+            {
+              auto first_pulse = this->pulse_lengths[0];
+              if (180000 < first_pulse && first_pulse < 220000)
+              {
+                // 200ms pulse detected
+                ESP_LOGD(TAG, "200ms pulse detected");
+                ESP_LOGD(TAG, "Flat %" PRIu32 " called", this->pulse_lengths_index - 1);
+                this->publish_state(this->pulse_lengths_index - 1);
+
+                this->pulse_lengths_index = 0;
+                break;
+              }
+            }
+
             this->pulse_lengths_index = 0;
             this->publish_state(0.0f);
           }
@@ -192,7 +210,7 @@ namespace esphome
       // This is an interrupt handler - we can't call any virtual method from this method
       // Get the current time before we do anything else so the measurements are consistent
       const uint32_t now = micros();
-      const bool pin_val = sensor->isr_pin_.digital_read();
+      bool pin_val = sensor->isr_pin_.digital_read();
 
       // A pulse occurred faster than we can detect
       if (sensor->last_pin_val_ == pin_val)
@@ -209,15 +227,18 @@ namespace esphome
         // Check if the last interrupt was long enough in the past
         if (now - sensor->last_intr_ > sensor->filter_us_)
         {
-          // High pulse of filter length now falling (therefore last_intr_ was the rising edge)
-          if (!sensor->in_pulse_ && sensor->last_pin_val_)
+          // Low pulse of filter length now falling (therefore last_intr_ was the rising edge)
+          if (!sensor->in_pulse_ && !sensor->last_pin_val_)
           {
             sensor->last_edge_candidate_us_ = sensor->last_intr_;
             sensor->in_pulse_ = true;
           }
-          // Low pulse of filter length now rising (therefore last_intr_ was the falling edge)
-          else if (sensor->in_pulse_ && !sensor->last_pin_val_)
+          // High pulse of filter length now rising (therefore last_intr_ was the falling edge)
+          else if (sensor->in_pulse_ && sensor->last_pin_val_)
           {
+            sensor->pulse_lengths[sensor->pulse_lengths_index] = now - sensor->last_edge_candidate_us_;
+            sensor->pulse_lengths_index++;
+
             sensor->set_->last_detected_edge_us_ = sensor->last_edge_candidate_us_;
             sensor->set_->count_++;
             sensor->in_pulse_ = false;
