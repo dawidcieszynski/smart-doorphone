@@ -33,6 +33,24 @@ Purpose of this project is to create a device integrated with Home Assistant tha
 
 - Receive calls using something like SIM800L
 
+## Technical details
+
+### Protocol
+For this line low is the active state.
+
+#### Flat call
+Flat call starts with init pulse of about 200ms
+
+![line init pulse](docs/img/line_init.png)
+
+Then subsequent pulses gives the flat number that is requested
+
+![line pulses](docs/img/line_pulse.png)
+
+after about 50 ms there will be an analog ring tone signal transfered through the line
+
+![timeout after flat number and ring tone](docs/img/line_timeout_ring.png)
+
 ## Related links
 
 - [ESPHome Pulse Meter Component](https://esphome.io/components/sensor/pulse_meter.html)
