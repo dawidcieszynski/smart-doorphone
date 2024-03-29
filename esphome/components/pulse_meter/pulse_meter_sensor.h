@@ -73,8 +73,14 @@ namespace esphome
       volatile State *set_ = state_;
       volatile State *get_ = state_ + 1;
 
-      uint32_t pulse_lengths[256];
-      size_t pulse_lengths_index = 0;
+      struct Pulse
+      {
+        uint32_t length = 0;
+        uint32_t pause = 0;
+      };
+
+      Pulse pulses[256];
+      size_t last_pulse_index = 0;
 
       // Only use these variables in the ISR
       ISRInternalGPIOPin isr_pin_;

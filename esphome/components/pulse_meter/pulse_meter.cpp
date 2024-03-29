@@ -114,30 +114,30 @@ namespace esphome
             this->log_state();
 
             ESP_LOGD(TAG, "Timeout for %" PRIu32 "ms (count: %" PRIu32 ")", time_since_valid_edge_us / 1000, this->total_pulses_);
-            ESP_LOGD(TAG, "Pulses %" PRIu32 "", this->pulse_lengths_index);
+            ESP_LOGD(TAG, "Pulses %" PRIu32 "", this->last_pulse_index);
 
-            for (size_t i = 0; i < this->pulse_lengths_index; i++)
+            for (size_t i = 0; i < this->last_pulse_index; i++)
             {
-              ESP_LOGD(TAG, "Pulse %" PRIu32 "", this->pulse_lengths[i]);
+              ESP_LOGD(TAG, "Pulse %" PRIu32 "us (%" PRIu32 "us pause)", this->pulses[i].length, this->pulses[i].pause);
             }
 
             // analyze pulses
-            if (this->pulse_lengths_index > 0)
+            if (this->last_pulse_index > 0)
             {
-              auto first_pulse = this->pulse_lengths[0];
-              if (180000 < first_pulse && first_pulse < 220000)
+              auto first_pulse = this->pulses[0];
+              if (180000 < first_pulse.length && first_pulse.length < 220000)
               {
                 // 200ms pulse detected
                 ESP_LOGD(TAG, "200ms pulse detected");
-                ESP_LOGD(TAG, "Flat %" PRIu32 " called", this->pulse_lengths_index - 1);
-                this->publish_state(this->pulse_lengths_index - 1);
+                ESP_LOGD(TAG, "Flat %" PRIu32 " called", this->last_pulse_index - 1);
+                this->publish_state(this->last_pulse_index - 1);
 
-                this->pulse_lengths_index = 0;
+                this->last_pulse_index = 0;
                 break;
               }
             }
 
-            this->pulse_lengths_index = 0;
+            this->last_pulse_index = 0;
             this->publish_state(0.0f);
           }
         }
@@ -196,8 +196,8 @@ namespace esphome
 
       if ((now - sensor->last_edge_candidate_us_) >= sensor->filter_us_)
       {
-        sensor->pulse_lengths[sensor->pulse_lengths_index] = now - sensor->last_edge_candidate_us_;
-        sensor->pulse_lengths_index++;
+        sensor->pulses[sensor->last_pulse_index].length = now - sensor->last_edge_candidate_us_;
+        sensor->last_pulse_index++;
 
         sensor->last_edge_candidate_us_ = now;
         sensor->set_->last_detected_edge_us_ = now;
@@ -230,14 +230,19 @@ namespace esphome
           // Low pulse of filter length now falling (therefore last_intr_ was the rising edge)
           if (!sensor->in_pulse_ && !sensor->last_pin_val_)
           {
+            if (sensor->last_pulse_index > 0)
+            {
+              sensor->pulses[sensor->last_pulse_index - 1].pause = now - sensor->last_intr_;
+            }
+
             sensor->last_edge_candidate_us_ = sensor->last_intr_;
             sensor->in_pulse_ = true;
           }
           // High pulse of filter length now rising (therefore last_intr_ was the falling edge)
           else if (sensor->in_pulse_ && sensor->last_pin_val_)
           {
-            sensor->pulse_lengths[sensor->pulse_lengths_index] = now - sensor->last_edge_candidate_us_;
-            sensor->pulse_lengths_index++;
+            sensor->pulses[sensor->last_pulse_index].length = now - sensor->last_edge_candidate_us_;
+            sensor->last_pulse_index++;
 
             sensor->set_->last_detected_edge_us_ = sensor->last_edge_candidate_us_;
             sensor->set_->count_++;
