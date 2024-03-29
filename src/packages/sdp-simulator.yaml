@@ -6,7 +6,7 @@ number:
     id: flat_no
     icon: mdi:house
     optimistic: true
-    initial_value: 1
+    initial_value: 5
     step: 1
     min_value: 1
     max_value: 25
