@@ -164,6 +164,8 @@ namespace esphome
       }
       ESP_LOGCONFIG(TAG, "  Assuming 0 pulses/min after not receiving a pulse for %" PRIu32 "s",
                     this->timeout_us_ / 1000000);
+      ESP_LOGCONFIG(TAG, "  Initial pulse length: %" PRIu32 "ms",
+                    this->initial_pulse_us_ / 1000);
     }
 
     void PulseMeterSensor::log_state()
@@ -240,10 +242,13 @@ namespace esphome
           // Low pulse of filter length now falling (therefore last_intr_ was the rising edge)
           if (!sensor->in_pulse_ && !sensor->last_pin_val_)
           {
-            if (sensor->last_pulse_index > 0)
+            // shouldn't happen
+            if (sensor->last_pulse_index == 0)
             {
-              sensor->pulses[sensor->last_pulse_index - 1].pause += now - sensor->last_intr_;
+              sensor->last_pulse_index++;
             }
+
+            sensor->pulses[sensor->last_pulse_index - 1].pause = now - sensor->last_intr_;
 
             sensor->last_edge_candidate_us_ = sensor->last_intr_;
             sensor->in_pulse_ = true;
