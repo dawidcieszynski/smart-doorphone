@@ -118,27 +118,54 @@ namespace esphome
 
             for (size_t i = 0; i < this->last_pulse_index; i++)
             {
-              ESP_LOGD(TAG, "Pulse %" PRIu32 "us (%" PRIu32 "us pause)", this->pulses[i].length, this->pulses[i].pause);
+              ESP_LOGD(TAG, " Pulse %" PRIu32 "us (%" PRIu32 "us pause)", this->pulses[i].length, this->pulses[i].pause);
             }
 
-            // analyze pulses
+            // analyze pulses (low active time/high pause time)
+            // 202.295/2.291ms initial pulse
+            // 22/224 us flat number pulses
+            // 190us/234us ring
             if (this->last_pulse_index > 0)
             {
-              auto first_pulse = this->pulses[0];
-
-              if ((this->initial_pulse_us_ * 0.9) < first_pulse.length && first_pulse.length < (this->initial_pulse_us_ * 1.1))
+              auto is_initial_pulse = [this](const Pulse &pulse)
               {
-                ESP_LOGD(TAG, "Initial pulse %" PRIu32 "ms detected", first_pulse.length / 1000);
-                ESP_LOGD(TAG, "Flat %" PRIu32 " called", this->last_pulse_index - 1);
-                this->publish_state(this->last_pulse_index - 1);
+                return (this->initial_pulse_us_ * 0.9) < pulse.length && pulse.length < (this->initial_pulse_us_ * 1.1);
+              };
 
+              bool initial_pulse = false;
+              auto flat_no_counter = 0;
+              for (size_t i = 0; i < this->last_pulse_index; i++)
+              {
+                if (!initial_pulse && is_initial_pulse(this->pulses[i]))
+                {
+                  initial_pulse = true;
+                  ESP_LOGD(TAG, "Initial pulse %" PRIu32 "ms detected", this->pulses[i].length / 1000);
+                  continue;
+                }
+
+                if (initial_pulse)
+                {
+                  flat_no_counter++;
+                }
+
+                if (this->pulses[i].pause > 1000) // flat number timeout
+                {
+                  break;
+                }
+              }
+
+              if (flat_no_counter > 0)
+              {
+                ESP_LOGD(TAG, "Flat %" PRIu32 " called", flat_no_counter);
+
+                this->publish_state(flat_no_counter);
                 this->clear_pulses();
                 break;
               }
             }
 
-            this->clear_pulses();
             this->publish_state(0.0f);
+            this->clear_pulses();
           }
         }
         break;
