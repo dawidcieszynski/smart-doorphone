@@ -23,29 +23,10 @@ sensor:
     internal_filter_mode: PULSE
     total:
       name: "GPIO0 Total"
-
-  - platform: pulse_meter
-    id: pulse_meter_gpio4
-    name: GPIO4
-    pin: GPIO4
-    internal_filter: 10us
-    initial_pulse: 200ms
-    timeout: 45ms
-    internal_filter_mode: EDGE
-    total:
-      name: "GPIO4 Total"
-
 button:
   - platform: template
     name: Reset GPIO0
     on_press:
       - pulse_meter.set_total_pulses:
           id: pulse_meter_gpio0
-          value: !lambda "return 0;"
-  
-  - platform: template
-    name: Reset GPIO4
-    on_press:
-      - pulse_meter.set_total_pulses:
-          id: pulse_meter_gpio4
           value: !lambda "return 0;"
