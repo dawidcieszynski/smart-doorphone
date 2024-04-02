@@ -132,12 +132,12 @@ namespace esphome
                 ESP_LOGD(TAG, "Flat %" PRIu32 " called", this->last_pulse_index - 1);
                 this->publish_state(this->last_pulse_index - 1);
 
-                this->last_pulse_index = 0;
+                this->clear_pulses();
                 break;
               }
             }
 
-            this->last_pulse_index = 0;
+            this->clear_pulses();
             this->publish_state(0.0f);
           }
         }
@@ -188,6 +188,16 @@ namespace esphome
       }
     }
 
+    void PulseMeterSensor::clear_pulses()
+    {
+      for (size_t i = 0; i < this->last_pulse_index; i++)
+      {
+        this->pulses[i].length = 0;
+        this->pulses[i].pause = 0;
+      }
+      this->last_pulse_index = 0;
+    }
+
     void IRAM_ATTR PulseMeterSensor::edge_intr(PulseMeterSensor *sensor)
     {
       // This is an interrupt handler - we can't call any virtual method from this method
@@ -232,7 +242,7 @@ namespace esphome
           {
             if (sensor->last_pulse_index > 0)
             {
-              sensor->pulses[sensor->last_pulse_index - 1].pause = now - sensor->last_intr_;
+              sensor->pulses[sensor->last_pulse_index - 1].pause += now - sensor->last_intr_;
             }
 
             sensor->last_edge_candidate_us_ = sensor->last_intr_;

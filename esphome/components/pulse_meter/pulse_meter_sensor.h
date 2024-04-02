@@ -39,6 +39,7 @@ namespace esphome
       static void edge_intr(PulseMeterSensor *sensor);
       static void pulse_intr(PulseMeterSensor *sensor);
       void log_state();
+      void clear_pulses();
 
       InternalGPIOPin *pin_{nullptr};
       uint32_t filter_us_ = 0;
