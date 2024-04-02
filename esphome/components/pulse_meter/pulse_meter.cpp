@@ -134,8 +134,10 @@ namespace esphome
 
               bool initial_pulse = false;
               auto flat_no_counter = 0;
+              ESP_LOGD(TAG, "Processing pulses");
               for (size_t i = 0; i < this->last_pulse_index; i++)
               {
+                ESP_LOGD(TAG, "  %" PRIu32 "", i);
                 if (!initial_pulse && is_initial_pulse(this->pulses[i]))
                 {
                   initial_pulse = true;
@@ -145,11 +147,13 @@ namespace esphome
 
                 if (initial_pulse)
                 {
+                  ESP_LOGD(TAG, "Increse Flat number");
                   flat_no_counter++;
                 }
 
-                if (this->pulses[i].pause > 1000) // flat number timeout
+                if (this->pulses[i].length > 0 && this->pulses[i].pause > 1000) // flat number timeout
                 {
+                  ESP_LOGD(TAG, "Flat number timeout");
                   break;
                 }
               }
