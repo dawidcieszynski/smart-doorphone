@@ -1,6 +1,10 @@
 # SmartDoorPhone
 
-![Image](./docs/img/_e67b7304-4aa4-4d6b-8bc5-cdb299155211.jpg)
+<div align="center">
+
+  <img src="docs/img/_e67b7304-4aa4-4d6b-8bc5-cdb299155211.jpg" alt="drawing" width="400" class="logo"/>
+
+</div>
 
 ## Purpose
 
