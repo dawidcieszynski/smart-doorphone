@@ -68,6 +68,8 @@ script:
       - lambda: |-
           int flasher_pin = 2; // GPIO2 for ESP-01S
 
+          auto flat = id(flat_no).state;
+
           // some noise
           digitalWrite(flasher_pin, LOW);
           delayMicroseconds(24);
@@ -79,8 +81,6 @@ script:
           delay(202);
           digitalWrite(flasher_pin, HIGH);
           delay(2.2);
-
-          auto flat = id(flat_no).state;
 
           for (int i = 0; i < flat; i++) {
               digitalWrite(flasher_pin, LOW);
