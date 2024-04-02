@@ -125,10 +125,10 @@ namespace esphome
             if (this->last_pulse_index > 0)
             {
               auto first_pulse = this->pulses[0];
-              if (180000 < first_pulse.length && first_pulse.length < 220000)
+
+              if ((this->initial_pulse_us_ * 0.9) < first_pulse.length && first_pulse.length < (this->initial_pulse_us_ * 1.1))
               {
-                // 200ms pulse detected
-                ESP_LOGD(TAG, "200ms pulse detected");
+                ESP_LOGD(TAG, "Initial pulse %" PRIu32 "ms detected", first_pulse.length / 1000);
                 ESP_LOGD(TAG, "Flat %" PRIu32 " called", this->last_pulse_index - 1);
                 this->publish_state(this->last_pulse_index - 1);
 
