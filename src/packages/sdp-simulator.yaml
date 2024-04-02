@@ -75,6 +75,14 @@ script:
           delayMicroseconds(24);
           digitalWrite(flasher_pin, HIGH);
           delayMicroseconds(100);
+          digitalWrite(flasher_pin, LOW);
+          delayMicroseconds(24);
+          digitalWrite(flasher_pin, HIGH);
+          delayMicroseconds(100);
+          digitalWrite(flasher_pin, LOW);
+          delayMicroseconds(24);
+          digitalWrite(flasher_pin, HIGH);
+          delayMicroseconds(100);
 
           // initial
           digitalWrite(flasher_pin, LOW);
@@ -92,6 +100,14 @@ script:
           delay(10);
 
           // some noise
+          digitalWrite(flasher_pin, LOW);
+          delayMicroseconds(24);
+          digitalWrite(flasher_pin, HIGH);
+          delayMicroseconds(100);
+          digitalWrite(flasher_pin, LOW);
+          delayMicroseconds(24);
+          digitalWrite(flasher_pin, HIGH);
+          delayMicroseconds(100);
           digitalWrite(flasher_pin, LOW);
           delayMicroseconds(24);
           digitalWrite(flasher_pin, HIGH);
