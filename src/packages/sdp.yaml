@@ -1,3 +1,5 @@
+## SDP core
+
 logger:
   baud_rate: 0
   logs:
@@ -11,6 +13,7 @@ external_components:
       type: local
       path: smart-doorphone/esphome/components
     components: [pulse_meter]
+    
 
 sensor:
   - platform: pulse_meter
