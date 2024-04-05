@@ -40,6 +40,7 @@ namespace esphome
       static void pulse_intr(PulseMeterSensor *sensor);
       void log_state();
       void clear_pulses();
+      void dump_logs();
 
       InternalGPIOPin *pin_{nullptr};
       uint32_t filter_us_ = 0;
@@ -82,6 +83,8 @@ namespace esphome
 
       Pulse pulses[256];
       size_t last_pulse_index = 0;
+
+      std::string logs;
 
       // Only use these variables in the ISR
       ISRInternalGPIOPin isr_pin_;

@@ -147,7 +147,7 @@ namespace esphome
 
                 if (initial_pulse)
                 {
-                  ESP_LOGD(TAG, "Increse Flat number");
+                  ESP_LOGD(TAG, "Increase Flat number");
                   flat_no_counter++;
                 }
 
@@ -231,6 +231,18 @@ namespace esphome
       this->last_pulse_index = 0;
     }
 
+    void PulseMeterSensor::dump_logs()
+    {
+      if (this->logs.empty())
+      {
+        return;
+      }
+
+      ESP_LOGD(TAG, "  Logs: %" PRIu32 "", this->logs.length());
+      ESP_LOGD(TAG, "  %s", this->logs.c_str());
+      this->logs.clear();
+    }
+
     void IRAM_ATTR PulseMeterSensor::edge_intr(PulseMeterSensor *sensor)
     {
       // This is an interrupt handler - we can't call any virtual method from this method
@@ -255,6 +267,8 @@ namespace esphome
       const uint32_t now = micros();
       bool pin_val = sensor->isr_pin_.digital_read();
 
+      // sensor->logs += std::to_string(pin_val) + " ";
+
       // A pulse occurred faster than we can detect
       if (sensor->last_pin_val_ == pin_val)
       {
@@ -271,21 +285,22 @@ namespace esphome
         if (now - sensor->last_intr_ > sensor->filter_us_)
         {
           // Low pulse of filter length now falling (therefore last_intr_ was the rising edge)
-          if (!sensor->in_pulse_ && !sensor->last_pin_val_)
+          if (!sensor->in_pulse_ && !pin_val)
           {
             // shouldn't happen
             if (sensor->last_pulse_index == 0)
             {
+              // sensor->logs += " ! ";
               sensor->last_pulse_index++;
             }
 
-            sensor->pulses[sensor->last_pulse_index - 1].pause = now - sensor->last_intr_;
+            sensor->pulses[sensor->last_pulse_index - 1].pause = now - sensor->get_->last_detected_edge_us_;
 
             sensor->last_edge_candidate_us_ = sensor->last_intr_;
             sensor->in_pulse_ = true;
           }
           // High pulse of filter length now rising (therefore last_intr_ was the falling edge)
-          else if (sensor->in_pulse_ && sensor->last_pin_val_)
+          else if (sensor->in_pulse_ && pin_val)
           {
             sensor->pulses[sensor->last_pulse_index].length = now - sensor->last_edge_candidate_us_;
             sensor->last_pulse_index++;
@@ -293,6 +308,10 @@ namespace esphome
             sensor->set_->last_detected_edge_us_ = sensor->last_edge_candidate_us_;
             sensor->set_->count_++;
             sensor->in_pulse_ = false;
+          }
+          else
+          {
+            // sensor->logs += " ? ";
           }
         }
 
